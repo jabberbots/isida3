@@ -21,8 +21,8 @@
 #                                                                             #
 # --------------------------------------------------------------------------- #
 
-PSTO_JID = 'psto@psto.net/Psto'
-PSTO_ERROR = '\nYou cannot read this psto.'
+PSTO_JID = 'p@point.im'
+PSTO_ERROR = '\nYou cannot read this post.'
 psto_msg_trunc = 64
 psto_id = {}
 
@@ -36,8 +36,8 @@ def psto(type, jid, nick, text):
 		if psto_idn:
 			psto_id[psto_idn] = '%s\n%s\n%s\n%s' % (type,jid,nick,psto_comm)
 			send_msg('chat', PSTO_JID, '', '#%s+' % psto_idn)
-		else: send_msg(type, jid, nick, L('Smoke help about command!','%s/%s'%(jid,nick)))
-	except: send_msg(type, jid, nick, L('Smoke help about command!','%s/%s'%(jid,nick)))
+		else: send_msg(type, jid, nick, L('Learn some syntax about command and try again!','%s/%s'%(jid,nick)))
+	except: send_msg(type, jid, nick, L('Learn some syntax about command and try again!','%s/%s'%(jid,nick)))
 
 def psto_catch(room,jid,nick,type,text):
 	global psto_id
@@ -49,7 +49,7 @@ def psto_catch(room,jid,nick,type,text):
 		try:
 			psto_idn, text = text.split(' ',1)[0][2:],text[1:]
 			(type,jid,nick,psto_comm) = psto_id.pop(psto_idn).split('\n')
-			splitter = re.findall('http\:\/\/[-a-z0-9]+?\.psto\.net\/%s' % psto_idn, text, re.S|re.I|re.U)[0]
+			splitter = re.findall('http\:\/\/[-a-z0-9]+?\.point\.im\/%s' % psto_idn, text, re.S|re.I|re.U)[0]
 			while '\n\n' in text: text = text.replace('\n\n','\n')
 			while '\n ' in text: text = text.replace('\n ','\n')
 			if psto_comm:
@@ -76,11 +76,11 @@ def psto_catch(room,jid,nick,type,text):
 def psto_post(type, jid, nick, text):
 	send_msg('chat', PSTO_JID, '', text)
 	time.sleep(1.2)
-	send_msg(type, jid, nick, L('Message posted to Psto.','%s/%s'%(jid,nick)))
+	send_msg(type, jid, nick, L('Message posted to Point.','%s/%s'%(jid,nick)))
 
 global execute,message_control
 
 message_control = [psto_catch]
 
-execute = [(3, 'psto', psto, 2, 'Miniblogs http://psto.net\npsto [#]post[/[from_comment][-][to_comment]] - show post'),
-		   (9, 'psto_post', psto_post, 2, 'Send message to blog at psto.net')]
+execute = [(3, 'point', psto, 2, 'Instant bloggint at http://point.im\npoint [#]post[/[from_comment][-][to_comment]] - show post'),
+		   (9, 'psto_post', psto_post, 2, 'Send message to blog at point.im')]
